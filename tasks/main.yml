@@ -6,8 +6,13 @@
 
 - block:
 
+  - name: download installer
+    get_url: url=https://getcomposer.org/installer dest=/tmp/composer_installer mode=0755
+
   - name: install
-    shell: "curl -sS https://getcomposer.org/installer | php -- --install-dir={{ composer_install_dir }}"
+    shell: php /tmp/composer_installer -- --filename=composer --install-dir={{ composer_install_dir }}
+    args:
+      chdir: '/tmp'
 
   - name: is exists composer.phar
     stat: path={{ composer_install_dir }}/composer.phar
