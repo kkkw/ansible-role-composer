@@ -31,3 +31,4 @@
     when: composer_self_update
 
   when: composer_is_installed.stat.exists is define and composer_is_installed.stat.exists == true
+  become: True
