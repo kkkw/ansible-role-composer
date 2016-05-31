@@ -29,11 +29,5 @@
       group: root
       mode: 0755
 
-  - name: update to the latest version
-    command: "{{ composer_install_dir }}/composer self-update"
-    register: composer_self_update
-    changed_when: "'Updating to version' in composer_self_update.stderr"
-    when: composer_self_update
-
   when: composer_is_installed.stat.exists is define and composer_is_installed.stat.exists == true
   become: True
