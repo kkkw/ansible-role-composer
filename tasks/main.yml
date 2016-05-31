@@ -1,0 +1,33 @@
+---
+# tasks file for ansible-role-composer
+- name: is installed
+  stat: path="{{ composer_install_dir }}/composer"
+  register: composer_is_installed
+
+- block:
+
+  - name: install
+    shell: "curl -sS https://getcomposer.org/installer | php -- --install-dir={{ composer_install_dir }}"
+
+  - name: is exists composer.phar
+    stat: path={{ composer_install_dir }}/composer.phar
+    register: composer_is_exists_phar
+
+  - name: rename from composer.phar to composer
+    command: "mv {{ composer_install_dir }}/composer.phar {{ composer_install_dir }}/composer"
+    when: composer_is_exists_phar.stat.exists
+
+  - name: change permissions
+    file:
+      path: "{{ composer_install_dir }}/composer"
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: update to the latest version
+    command: "{{ composer_install_dir }}/composer self-update"
+    register: composer_self_update
+    changed_when: "'Updating to version' in composer_self_update.stderr"
+    when: composer_self_update
+
+  when: composer_is_installed.stat.exists is define and composer_is_installed.stat.exists == true
