@@ -29,5 +29,5 @@
       group: root
       mode: 0755
 
-  when: composer_is_installed.stat.exists is define and composer_is_installed.stat.exists == true
+  when: composer_is_installed.stat.exists is defined and composer_is_installed.stat.exists == false
   become: True
