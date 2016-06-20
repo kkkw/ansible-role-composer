@@ -1,5 +1,5 @@
 ---
-# tasks file for ansible-role-composer
+# tasks file for role-composer
 - name: is installed
   stat: path="{{ composer_install_dir }}/composer"
   register: composer_is_installed
@@ -11,16 +11,6 @@
 
   - name: install
     shell: php /tmp/composer_installer -- --filename=composer --install-dir={{ composer_install_dir }}
-    args:
-      chdir: '/tmp'
-
-  - name: is exists composer.phar
-    stat: path={{ composer_install_dir }}/composer.phar
-    register: composer_is_exists_phar
-
-  - name: rename from composer.phar to composer
-    command: "mv {{ composer_install_dir }}/composer.phar {{ composer_install_dir }}/composer"
-    when: composer_is_exists_phar.stat.exists
 
   - name: change permissions
     file:
